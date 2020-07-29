@@ -12,6 +12,8 @@ export OrderingServiceEndpoint=orderer.n-rptbife6ujgfhkxxvmds35rg7m.managedblock
 export CaEndpoint=ca.m-qxrpgoe44feurb3374mpcu3ade.n-rptbife6ujgfhkxxvmds35rg7m.managedblockchain.eu-west-1.amazonaws.com:30002
 export VPCENDPOINTSERVICENAME=$VpcEndpointServiceName
 export CASERVICEENDPOINT=$CaEndpoint
+export CASERVICEENDPOINTNOPORT=${CaEndpoint::-6}
+
 
 echo Client-node for member SKF: ec2-3-250-171-199.eu-west-1.compute.amazonaws.com
 echo ssh ec2-user@ec2-3-250-171-199.eu-west-1.compute.amazonaws.com -i test-nw-keypair.pem 
