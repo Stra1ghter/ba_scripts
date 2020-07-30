@@ -49,6 +49,7 @@ async function queryByKey(stub, key) {
  * to support LevelDB range queries where CouchDB was not available.
  * 
  * @param {*} queryString - the query string to execute
+ * example '{"selector": {"docType": "spendAllocation", "ngoRegistrationNumber": "' + ngo + '"}}''
  */
 async function queryByString(stub, queryString) {
   console.log('============= START : queryByString ===========');
