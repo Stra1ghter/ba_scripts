@@ -2,6 +2,7 @@
   "name": "bearing_supply_chain",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "engines": {
     "node": ">=8.4.0",
     "npm": ">=5.3.0"
