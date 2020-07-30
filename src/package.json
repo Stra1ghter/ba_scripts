@@ -12,6 +12,7 @@
   "engine-strict": true,
   "license": "Apache-2.0",
   "dependencies": {
+    "@theledger/fabric-mock-stub": "^2.0.3",
     "fabric-shim": "1.2.0"
   }
 }
