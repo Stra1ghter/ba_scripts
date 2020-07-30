@@ -14,6 +14,26 @@ let log = function(msg){
 }
 
 
+/**
+ * Executes a query using a specific key
+ * 
+ * @param {*} key - the key to use in the query
+ */
+async function queryByKey(stub, key){
+  log("queryByKey() called");
+  log("queryByKey args: " + key);
+
+  let resultAsBytes = await stub.getState(key);
+  if(!resultAsBytes || resultAsBytes.toString().length == 0) {
+    throw new Error('queryByKey key: ' + key + ' does not exist!');
+  }
+  log("queryByKey response: " + resultAsBytes);
+  log("End queryByKey");
+  return resultAsBytes;
+}
+
+
+
 let Chaincode = class {
 
   /**
@@ -50,4 +70,59 @@ let Chaincode = class {
       return shim.error(err);
     }
   }
+
+  /**
+   * Stores a produced bearing in the chain.
+   * 
+   * @param {ChainCodeStub} stub 
+   * @param {*} args - JSON string with the format as follows:
+   * {
+   *    "UID": "d8a83c3eeer3werw",
+   *    "producedDate": "2020-07-30T14:42:20.182Z"
+   * }
+   */
+  async produceBearing(stub, args){
+    log("produceBearing() called");
+    log("produceBearing args: " + JSON.stringify(args));
+
+    let json = JSON.parse(args);
+    json['docType'] = 'bearing';
+    let UID = json['UID'];
+    let key = 'bearing' + UID;   
+    json['owner'] = 'SKF';
+
+    let bearingQuery = await stub.getState(key);
+    if(bearingQuery.toString())
+      throw new Error('This bearing already exists: ' + UID);
+
+    await stub.putState(key, Buffer.from(JSON.stringify(json)))
+    console.log("End produceBearing()")
+  }
+
+  // transfer 
+
+  // put associated metadata
+
+  // get associated metadata
+
+  /**
+   * Retrieve a specific bearing
+   * 
+   * @param {ChainCodeStub} stub 
+   * @param {*} args - JSON string with the format as follows:
+   * {
+   *    "UID": "d8a83c3eeer3werw"
+   * }
+   */
+   async queryBearing(stub, args){
+    log("queryBearing() called");
+    log("queryBearing args: " + JSON.stringify(args));
+
+    let json = JSON.parse(args);
+    let key = 'bearing' + json['UID'];
+    log("Query by key: " + key);
+
+    return queryByKey(stub, key);
+   }
+
 }
