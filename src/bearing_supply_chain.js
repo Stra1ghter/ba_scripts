@@ -279,8 +279,7 @@ const Chaincode = class {
    * @param {ChainCodeStub} stub 
    * @param {*} args - JSON string with the format as follows:
    * {
-   *    "UID": "d8a83c3eeer3werw",
-   *    "metadata": {...}
+   *    "UID": "d8a83c3eeer3werw"
    * }
    */
    async getBearingMetadata(stub, args){
