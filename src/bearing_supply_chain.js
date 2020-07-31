@@ -126,5 +126,6 @@ const Chaincode = class {
 }
 
 module.exports = Chaincode;
+shim.sart(new Chaincode());
 //let c = new Chaincode();
 //c.Init();
