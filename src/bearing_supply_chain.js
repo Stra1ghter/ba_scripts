@@ -4,7 +4,7 @@
 #		It should also track different kinds of information with the product
 #		e.g. shipment date, type
 #	  
-#   Chaincode-Version (for deployment): 0.1	
+#   Chaincode-Version (for deployment): 0.2
 */
 const shim = require('fabric-shim');
 const util = require('util');

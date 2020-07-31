@@ -10,8 +10,16 @@
   "scripts": {
     "start": "node bearing_supply_chain.js"
   },
+  "engine-strict": true,
   "license": "Apache-2.0",
   "dependencies": {
-    "fabric-shim": "1.2.0"
+    "@theledger/fabric-mock-stub": "^2.0.3",
+    "chai": "^4.2.0",
+    "fabric-shim": "^2.0.0-snapshot.124",
+    "mocha": "^4.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4"
   }
 }
