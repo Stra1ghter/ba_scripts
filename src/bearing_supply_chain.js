@@ -97,7 +97,12 @@ const Chaincode = class {
     if(bearingQuery.toString()){
       console.log('##### This bearing already exists: ' + UID);
       return '##### This bearing already exists: ' + UID;
-	}
+	  }
+
+    let datetime = json['producedDate'];
+    if(!datetime)
+      json['producedDate'] = new Date().toISOString();
+    
 
     await stub.putState(key, Buffer.from(JSON.stringify(json)))
     console.log('============= END : produceBearing ===========');
