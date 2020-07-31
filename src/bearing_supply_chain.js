@@ -9,12 +9,7 @@
 
 'use strict';
 const shim = require('fabric-shim');
-//const shim  = require('./mock.js');
 const util = require('util');
-
-let log = function(msg){
-		console.log("[Bearing_supply_chain-CC]: " + msg);	
-}
 
 
 /**
@@ -336,8 +331,4 @@ const Chaincode = class {
 
 }
 
-//module.exports = Chaincode;
 shim.start(new Chaincode());
-//let c = new Chaincode();
-//c.Init();
-//c.queryBearing(shim, "{\"UID\": \"d8a83c3eeer3werw\"}")
