@@ -205,7 +205,44 @@ const Chaincode = class {
   }
 
 
-  // transfer 
+  /**
+   * Transfer the ownership of a bearing
+   * 
+   * @param {ChainCodeStub} stub 
+   * @param {*} args - JSON string with the format as follows:
+   * {
+   *    "UID": "d8a83c3eeer3werw",
+   *    "owner": "nameOfNewOwner"
+   * }
+   */
+  async transfer(stub, args){
+    console.log('============= START : transfer ===========');
+    console.log('##### transfer arguments: ' + JSON.stringify(args));
+
+    let json = JSON.parse(args);
+    
+    let newOwner = json["owner"];
+    if(!newOwner || !newOwner.toString())
+      throw new Error('##### transfer - New owner not supplied as argument: ' + JSON.stringify(args));
+
+    let UID = json["UID"];
+    if(!UID || !UID.toString())
+      throw new Error('##### transfer - UID not supplied as argument: ' + JSON.stringify(args));
+
+    let bearingAsBytes = await stub.getState("bearing" + UID);
+    if (!bearingAsBytes.toString() || bearingAsBytes.toString().length <= 0) {
+      throw new Error('##### transfer - Cannot transfer ownership as the bearing does not exist: ' + json["UID"]);
+    }
+
+    let bearing = Buffer.toJSON(bearingAsBytes);
+    bearing["owner"] = newOwner;
+
+    await stub.putState("bearing" + UID, Buffer.from(JSON.stringify(bearing)));
+
+    
+    console.log('============= END : transfer ===========');
+    return queryBearing(stub, '{"UID": ' + UID + '}');
+   }
 
   // put associated metadata
 
