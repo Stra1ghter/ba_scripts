@@ -1,0 +1,5 @@
+Workaround here is to manually download unstable version of fabric-shim npm i fabric-shim@2.0.0-snapshot.124, after this command smart contract project was packaged successfully.
+
+Not sure though if this workaround could bring me any troubles later on.
+
+https://github.com/IBM-Blockchain/blockchain-vscode-extension/issues/1821

@@ -5,7 +5,6 @@
 #		e.g. shipment date, type
 #		
 */
-
 const shim = require('fabric-shim');
 const util = require('util');
 
@@ -33,8 +32,7 @@ async function queryByKey(stub, key){
 }
 
 
-
-let Chaincode = class {
+const Chaincode = class {
 
   /**
    * Initialize the state of the chaincode ledger
@@ -56,7 +54,7 @@ let Chaincode = class {
     let fap = stub.getFunctionAndParameters();
     log('Invoke args: ' + JSON.stringify(fap));
 
-    let method = this[fap.fcn];
+    let method = this[fab.fcn];
     if (!method) {
       error('Invoke - error: no chaincode function with name: ' + ret.fcn + ' found');
       throw new Error('No chaincode function with name: ' + ret.fcn + ' found');
@@ -126,3 +124,6 @@ let Chaincode = class {
    }
 
 }
+
+//let c = new Chaincode();
+//c.Init();
