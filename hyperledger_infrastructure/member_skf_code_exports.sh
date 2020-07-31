@@ -21,5 +21,5 @@ echo
 echo instantiate chaincode example:
 echo docker exec cli peer chaincode instantiate \
 -o $ORDERER -C mychannel -n bearing_supply_chain -v v0 \
--c \'{"Args":["init"]}\' \
+-c \'{\"Args\":[\"init\"]}\' \
 --cafile /opt/home/managedblockchain-tls-chain.pem --tls
