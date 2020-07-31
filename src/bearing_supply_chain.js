@@ -6,6 +6,8 @@
 #	  
 #   Chaincode-Version (for deployment): 1.0.4
 */
+
+'use strict';
 const shim = require('fabric-shim');
 const util = require('util');
 
@@ -19,16 +21,16 @@ let log = function(msg){
  * 
  * @param {*} key - the key to use in the query
  */
-async function queryByKey(stub, key){
-  log("queryByKey() called");
-  log("queryByKey args: " + key);
+async function queryByKey(stub, key) {
+  console.log('============= START : queryByKey ===========');
+  console.log('##### queryByKey key: ' + key);
 
-  let resultAsBytes = await stub.getState(key);
-  if(!resultAsBytes || resultAsBytes.toString().length == 0) {
-    throw new Error('queryByKey key: ' + key + ' does not exist!');
+  let resultAsBytes = await stub.getState(key); 
+  if (!resultAsBytes || resultAsBytes.toString().length <= 0) {
+    throw new Error('##### queryByKey key: ' + key + ' does not exist');
   }
-  log("queryByKey response: " + resultAsBytes);
-  log("End queryByKey");
+  console.log('##### queryByKey response: ' + resultAsBytes);
+  console.log('============= END : queryByKey ===========');
   return resultAsBytes;
 }
 
@@ -51,21 +53,21 @@ const Chaincode = class {
    * @param {ChainCodeStub} stub 
    */
   async Invoke(stub) {
-    log('Invoke() called');    
-    let fap = stub.getFunctionAndParameters();
-    log('Invoke args: ' + JSON.stringify(fap));
+    console.log('============= START : Invoke ===========');
+    let ret = stub.getFunctionAndParameters();
+    console.log('##### Invoke args: ' + JSON.stringify(ret));
 
-    let method = this[fab.fcn];
+    let method = this[ret.fcn];
     if (!method) {
-      error('Invoke - error: no chaincode function with name: ' + ret.fcn + ' found');
+      console.error('##### Invoke - error: no chaincode function with name: ' + ret.fcn + ' found');
       throw new Error('No chaincode function with name: ' + ret.fcn + ' found');
     }
     try {
-      let response = await method(stub, fab.params);
-      log('Invoke response: ' + response);
+      let response = await method(stub, ret.params);
+      console.log('##### Invoke response payload: ' + response);
       return shim.success(response);
     } catch (err) {
-      console.log('Invoke - error: ' + err);
+      console.log('##### Invoke - error: ' + err);
       return shim.error(err);
     }
   }
@@ -98,6 +100,12 @@ const Chaincode = class {
     console.log("End produceBearing()")
   }
 
+  async initLedger(stub, args) {
+    console.log('============= START : Initialize Ledger ===========');
+    console.log('============= END : Initialize Ledger ===========');
+  }
+
+
   // transfer 
 
   // put associated metadata
@@ -114,19 +122,20 @@ const Chaincode = class {
    * }
    */
    async queryBearing(stub, args){
-    log("queryBearing() called");
-    log("queryBearing args: " + args);
+    console.log('============= START : queryBearing ===========');
+    console.log('##### queryDonor arguments: ' + JSON.stringify(args));
 
+    // args is passed as a JSON string
     let json = JSON.parse(args);
     let key = 'bearing' + json['UID'];
-    log("Query by key: " + key);
+    console.log('##### queryBearing key: ' + key);
 
     return queryByKey(stub, key);
    }
 
 }
 
-module.exports = Chaincode;
+//module.exports = Chaincode;
 shim.start(new Chaincode());
 //let c = new Chaincode();
 //c.Init();
