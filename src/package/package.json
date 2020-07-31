@@ -1,6 +1,6 @@
 {
   "name": "bearing_supply_chain",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "",
   "engines": {
     "node": ">=8.4.0",
