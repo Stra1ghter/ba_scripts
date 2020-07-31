@@ -115,7 +115,7 @@ const Chaincode = class {
    */
    async queryBearing(stub, args){
     log("queryBearing() called");
-    log("queryBearing args: " + JSON.stringify(args));
+    log("queryBearing args: " + args);
 
     let json = JSON.parse(args);
     let key = 'bearing' + json['UID'];
