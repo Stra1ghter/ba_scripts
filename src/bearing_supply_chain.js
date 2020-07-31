@@ -234,7 +234,6 @@ const Chaincode = class {
       throw new Error('##### transfer - Cannot transfer ownership as the bearing does not exist: ' + json["UID"]);
     }
 
-//Buffer.toString(bearingAsBytes)
     let bearing = JSON.parse(bearingAsBytes);
     bearing["owner"] = newOwner;
 
