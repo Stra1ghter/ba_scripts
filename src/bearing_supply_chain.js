@@ -246,6 +246,15 @@ const Chaincode = class {
     return queryByKey(stub, 'bearing' + UID);
    }
 
+   async transfer2(stub, args){
+    console.log('============= START : transfer ===========');
+    console.log('##### transfer arguments: ' + JSON.stringify(args));
+
+    let json = JSON.parse(args);
+        let newOwner = json["owner"];
+      throw new Error('##### transfer - New owner not supplied as argument: ' + JSON.stringify(args));
+  }
+
   // put associated metadata
 
   // get associated metadata
