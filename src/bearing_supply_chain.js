@@ -125,5 +125,6 @@ const Chaincode = class {
 
 }
 
+module.exports = Chaincode;
 //let c = new Chaincode();
 //c.Init();

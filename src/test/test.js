@@ -2,7 +2,7 @@
 //import { Chaincode } from './bearing_supply_chain.js';
 //const fs = require("fs");
 //eval(fs.readFileSync('bearing_supply_chain.js')+''); // '' turns the object to a string
-const Chaincode = require('../bearing_supply_chain.js').Chaincode;
+const Chaincode = require('../bearing_supply_chain.js');
 
 const chai = require('chai');
 const expect = chai.expect;
