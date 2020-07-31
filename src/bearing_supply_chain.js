@@ -26,13 +26,13 @@ async function queryByKey(stub, key) {
   console.log('============= START : queryByKey ===========');
   console.log('##### queryByKey key: ' + key);
 
-  let resultAsBytes = await stub.getState(key); 
-  if (!resultAsBytes || resultAsBytes.toString().length <= 0) {
+  let res = await stub.getState(key); 
+  if (!res || res.toString().length <= 0) {
     throw new Error('##### queryByKey key: ' + key + ' does not exist');
   }
-  console.log('##### queryByKey response: ' + resultAsBytes);
+  console.log('##### queryByKey response: ' + res);
   console.log('============= END : queryByKey ===========');
-  return resultAsBytes;
+  return res;
 }
 
 /**
@@ -199,10 +199,6 @@ const Chaincode = class {
     console.log('============= END : produceBearing ===========');
   }
 
-  async initLedger(stub, args) {
-    console.log('============= START : Initialize Ledger ===========');
-    console.log('============= END : Initialize Ledger ===========');
-  }
 
 
   /**
@@ -245,9 +241,64 @@ const Chaincode = class {
     return queryByKey(stub, 'bearing' + UID);
    }
 
-  // put associated metadata
+  /**
+   * Store associated metadata to a bearing
+   * Note: overwrites existing metadata of a bearing!
+   * 
+   * @param {ChainCodeStub} stub 
+   * @param {*} args - JSON string with the format as follows:
+   * {
+   *    "UID": "d8a83c3eeer3werw",
+   *    "metadata": {...}
+   * }
+   */
+   async putBearingMetadata(stub, args){
+    console.log('============= START : putBearingMetadata ===========');
+    console.log('##### putBearingMetadata arguments: ' + JSON.stringify(args));
 
-  // get associated metadata
+    let json = JSON.parse(args);
+    json['docType'] = 'metadata';
+    let UID = json['UID'];
+    let key = 'metadata' + UID;   
+    
+    let bearingQuery = await stub.getState(key);
+    if(bearingQuery.toString()){
+      console.log('##### This bearing already has asssociated metadata: ' + UID);
+      return '##### This bearing already has asssociated metadata: ' + UID;
+    }
+
+    let metadata = json["metadata"];
+  
+    await stub.putState(key, Buffer.from(JSON.stringify(metadata)))
+    console.log('============= END : putBearingMetadata ===========');
+   }
+
+  /**
+   * Get the associated metadata of a bearing
+   * 
+   * @param {ChainCodeStub} stub 
+   * @param {*} args - JSON string with the format as follows:
+   * {
+   *    "UID": "d8a83c3eeer3werw",
+   *    "metadata": {...}
+   * }
+   */
+   async getBearingMetadata(stub, args){
+    console.log('============= START : getBearingMetadata ===========');
+    console.log('##### getBearingMetadata arguments: ' + JSON.stringify(args));
+
+    let json = JSON.parse(args);
+    json['docType'] = 'metadata';
+    let UID = json['UID'];
+    let key = 'metadata' + UID;   
+
+    let res = await stub.getState(key); 
+    if (!res || res.toString().length <= 0) {
+      throw new Error('##### getBearingMetadata key: ' + key + ' does not exist');
+    }
+    
+    return res['metadata'];
+   }
 
   /**
    * Retrieve a specific bearing
