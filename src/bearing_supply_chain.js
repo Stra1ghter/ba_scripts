@@ -251,8 +251,8 @@ const Chaincode = class {
     console.log('##### transfer arguments: ' + JSON.stringify(args));
 
     let json = JSON.parse(args);
-        let newOwner = json["owner"];
-      throw new Error('##### transfer - New owner not supplied as argument: ' + JSON.stringify(args));
+    let newOwner = json["owner"];
+    throw new Error('##### transfer - New owner not supplied as argument: ');
   }
 
   // put associated metadata
