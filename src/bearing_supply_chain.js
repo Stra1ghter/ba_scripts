@@ -234,14 +234,14 @@ const Chaincode = class {
       throw new Error('##### transfer - Cannot transfer ownership as the bearing does not exist: ' + json["UID"]);
     }
 
-    let bearing = Buffer.toJSON(bearingAsBytes);
+    let bearing = JSON.parse(Buffer.toString(bearingAsBytes));
     bearing["owner"] = newOwner;
 
     await stub.putState("bearing" + UID, Buffer.from(JSON.stringify(bearing)));
 
     
     console.log('============= END : transfer ===========');
-    return queryBearing(stub, '{"UID": ' + UID + '}');
+    return queryByKey(stub, 'bearing' + UID);
    }
 
   // put associated metadata
