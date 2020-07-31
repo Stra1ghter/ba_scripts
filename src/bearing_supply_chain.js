@@ -3,7 +3,8 @@
 #		The goal is to have a supply chain blockchain, that tracks products
 #		It should also track different kinds of information with the product
 #		e.g. shipment date, type
-#		
+#	  
+#   Chaincode-Version (for deployment): 0.1	
 */
 const shim = require('fabric-shim');
 const util = require('util');
