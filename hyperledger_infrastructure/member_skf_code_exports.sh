@@ -28,7 +28,7 @@ echo docker exec cli peer chaincode instantiate \
 echo 
 echo upgradate chaincode
 echo peer chaincode upgrade -n bearing_supply_chain -v 1.0.3 \
-               -c '{"Args":[""]}' \
+               -c \'{\"Args\":[\"\"]}\' \
                -p /opt/home/ba_scripts/src/package/ -C mychannel \
                -o $ORDERER
 
