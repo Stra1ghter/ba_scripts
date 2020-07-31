@@ -84,8 +84,8 @@ const Chaincode = class {
    * }
    */
   async produceBearing(stub, args){
-    log("produceBearing() called");
-    log("produceBearing args: " + JSON.stringify(args));
+    console.log('============= START : produceBearing ===========');
+    console.log('##### produceBearing arguments: ' + JSON.stringify(args));
 
     let json = JSON.parse(args);
     json['docType'] = 'bearing';
@@ -95,12 +95,12 @@ const Chaincode = class {
 
     let bearingQuery = await stub.getState(key);
     if(bearingQuery.toString()){
-      log('This bearing already exists: ' + UID);
-      return 'This bearing already exists: ' + UID;
+      console.log('##### This bearing already exists: ' + UID);
+      return '##### This bearing already exists: ' + UID;
 	}
 
     await stub.putState(key, Buffer.from(JSON.stringify(json)))
-    console.log("End produceBearing()")
+    console.log('============= END : produceBearing ===========');
   }
 
   async initLedger(stub, args) {
