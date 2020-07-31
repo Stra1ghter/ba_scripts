@@ -230,12 +230,14 @@ const Chaincode = class {
       throw new Error('##### transfer - UID not supplied as argument: ' + JSON.stringify(args));
 
     let bearingAsBytes = await stub.getState("bearing" + UID);
+    throw new Error(bearingAsBytes);
     if (!bearingAsBytes.toString() || bearingAsBytes.toString().length <= 0) {
       throw new Error('##### transfer - Cannot transfer ownership as the bearing does not exist: ' + json["UID"]);
     }
 
     let bearing = JSON.parse(Buffer.toString(bearingAsBytes));
     bearing["owner"] = newOwner;
+
 
     await stub.putState("bearing" + UID, Buffer.from(JSON.stringify(bearing)));
 
