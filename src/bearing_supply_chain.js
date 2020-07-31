@@ -9,6 +9,7 @@
 
 'use strict';
 const shim = require('fabric-shim');
+//const shim  = require('./mock.js');
 const util = require('util');
 
 let log = function(msg){
@@ -93,8 +94,10 @@ const Chaincode = class {
     json['owner'] = 'SKF';
 
     let bearingQuery = await stub.getState(key);
-    if(bearingQuery.toString())
-      throw new Error('This bearing already exists: ' + UID);
+    if(bearingQuery.toString()){
+      log('This bearing already exists: ' + UID);
+      return 'This bearing already exists: ' + UID;
+	}
 
     await stub.putState(key, Buffer.from(JSON.stringify(json)))
     console.log("End produceBearing()")
@@ -139,3 +142,4 @@ const Chaincode = class {
 shim.start(new Chaincode());
 //let c = new Chaincode();
 //c.Init();
+//c.queryBearing(shim, "{\"UID\": \"d8a83c3eeer3werw\"}")
