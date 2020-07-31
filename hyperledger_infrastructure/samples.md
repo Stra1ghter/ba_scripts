@@ -1,6 +1,6 @@
 ## install chaincode example:
 
-docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem" -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer chaincode install -n bearing_supply_chain -l node -v v1.0.17 -p /opt/home/ba_scripts/src/package/
+docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem" -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer chaincode install -n bearing_supply_chain -l node -v v1.0.18 -p /opt/home/ba_scripts/src/package/
 
 
 docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem" -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer chaincode install -n ngo -l node -v v1.1 -p /opt/home/non-profit-blockchain/ngo-chaincode/src/
@@ -13,7 +13,7 @@ docker exec cli peer chaincode instantiate -o $ORDERER -C mychannel -n bearing_s
 
 ## upgrade
 
-docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem"  -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer chaincode upgrade -n bearing_supply_chain -v v1.0.17 -c '{"Args":[""]}' -p /opt/home/ba_scripts/src/package/ -C mychannel -o $ORDERER --cafile /opt/home/managedblockchain-tls-chain.pem --tls
+docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem"  -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer chaincode upgrade -n bearing_supply_chain -v v1.0.18 -c '{"Args":[""]}' -p /opt/home/ba_scripts/src/package/ -C mychannel -o $ORDERER --cafile /opt/home/managedblockchain-tls-chain.pem --tls
  
 docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem"  -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer chaincode upgrade -n ngo -v v1.1 -c '{"Args":[""]}' -p /opt/home/non-profit-blockchain/ngo-chaincode/src/ -C mychannel -o $ORDERER --cafile /opt/home/managedblockchain-tls-chain.pem --tls
 
@@ -56,4 +56,4 @@ docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt
 
 
 ## put
-docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem" -e "CORE_PEER_ADDRESS=$PEER" -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" cli peer chaincode invoke -C mychannel -n bearing_supply_chain -c  '{"Args":["putBearingMetadata","{\"UID\": \"d8a83c3eeer3werw\", \"metadata\": \"{\"productionPlant\":\"Schweinfurt\",\"OR_diameter_m\":10}\" }"]}' -o $ORDERER --cafile /opt/home/managedblockchain-tls-chain.pem --tls
+docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem" -e "CORE_PEER_ADDRESS=$PEER" -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" cli peer chaincode invoke -C mychannel -n bearing_supply_chain -c  '{"Args":["putBearingMetadata","{\"UID\": \"d8a83c3eeer3werw\", \"metadata\": {\"productionPlant\":\"Schweinfurt\",\"OR_diameter_m\":10} }"]}' -o $ORDERER --cafile /opt/home/managedblockchain-tls-chain.pem --tls

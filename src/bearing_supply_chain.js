@@ -296,7 +296,7 @@ const Chaincode = class {
       throw new Error('##### getBearingMetadata key: ' + key + ' does not exist');
     }
     
-    return res['metadata'];
+    return res;
    }
 
   /**
