@@ -19,6 +19,15 @@ export PEERSERVICEENDPOINT=$peerEndpoint
 export PEERSERVICEENDPOINTNOPORT=${PEERSERVICEENDPOINT::-6}
 export PEEREVENTENDPOINT=$peerEventEndpoint
 
+
+export CaEndpoint=ca.m-qxrpgoe44feurb3374mpcu3ade.n-rptbife6ujgfhkxxvmds35rg7m.managedblockchain.eu-west-1.amazonaws.com:30002
+export VPCENDPOINTSERVICENAME=com.amazonaws.eu-west-1.managedblockchain.n-rptbife6ujgfhkxxvmds35rg7m
+export VpcEndpointServiceName=com.amazonaws.eu-west-1.managedblockchain.n-rptbife6ujgfhkxxvmds35rg7m
+export VPCENDPOINTSERVICENAME=$VpcEndpointServiceName
+export CASERVICEENDPOINT=$CaEndpoint
+export CASERVICEENDPOINTNOPORT=${CaEndpoint::-6}
+
+
 echo Useful information stored in EXPORT variables
 echo REGION: $REGION
 echo NETWORKNAME: $NETWORKNAME
