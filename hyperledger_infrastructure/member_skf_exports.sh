@@ -9,6 +9,10 @@ if [[ -z "${ADMINUSER}" ]] || [[ -z "${ADMINPWD}" ]]; then
 	echo todo: export ADMINPWD=
 fi
 
+export MSP=$MEMBERID
+export ORDERER=$ORDERINGSERVICEENDPOINT
+export PEER=$PEERSERVICEENDPOINT
+
 
 export nodeID=nd-XSKKRLEQB5DUVEINFQAOGL36YQ
 export peerEndpoint=nd-xskkrleqb5duveinfqaogl36yq.m-qxrpgoe44feurb3374mpcu3ade.n-rptbife6ujgfhkxxvmds35rg7m.managedblockchain.eu-west-1.amazonaws.com:30003
