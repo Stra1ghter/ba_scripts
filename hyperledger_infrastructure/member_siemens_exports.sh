@@ -7,7 +7,6 @@ if [[ -z "${ADMINUSER}" ]] || [[ -z "${ADMINPWD}" ]]; then
 	echo You forgot to export the following environment variables:
 	echo todo: export ADMINUSER=
 	echo todo: export ADMINPWD=
-	exit 1
 fi
 
 
