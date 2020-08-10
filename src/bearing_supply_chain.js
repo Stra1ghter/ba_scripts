@@ -1,16 +1,12 @@
 /*
-#		Prototype of a supply chain application
-#		The goal is to have a supply chain blockchain, that tracks products
-#		It should also track different kinds of information with the product
-#		e.g. shipment date, type
-#	  
-#   Chaincode-Version (for deployment): 1.0.4
+#		Prototype chain code that tracks produced bearings and its metadata
+#
+#   Chaincode-Version: 1.0.19
 */
 
 'use strict';
 const shim = require('fabric-shim');
 const util = require('util');
-
 
 /**
  * Executes a query using a specific key
@@ -18,15 +14,13 @@ const util = require('util');
  * @param {*} key - the key to use in the query
  */
 async function queryByKey(stub, key) {
-  console.log('============= START : queryByKey ===========');
-  console.log('##### queryByKey key: ' + key);
+  console.log('queryByKey() - key arg: ' + key);
 
   let res = await stub.getState(key); 
   if (!res || res.toString().length <= 0) {
-    throw new Error('##### queryByKey key: ' + key + ' does not exist');
+    throw new Error('queryByKey() key: ' + key + ' does not exist');
   }
-  console.log('##### queryByKey response: ' + res);
-  console.log('============= END : queryByKey ===========');
+  console.log('queryByKey() response: ' + res);
   return res;
 }
 
@@ -37,19 +31,13 @@ async function queryByKey(stub, key) {
  * to support LevelDB range queries where CouchDB was not available.
  * 
  * @param {*} queryString - the query string to execute
- * example '{"selector": {"docType": "spendAllocation", "ngoRegistrationNumber": "' + ngo + '"}}''
+ * example '{"selector": {"docType": "myType"}}''
  */
 async function queryByString(stub, queryString) {
-  console.log('============= START : queryByString ===========');
-  console.log("##### queryByString queryString: " + queryString);
+  console.log("queryByString() - queryString arg: " + queryString);
 
-  // CouchDB Query
-  // let iterator = await stub.getQueryResult(queryString);
-
-  // Equivalent LevelDB Query. We need to parse queryString to determine what is being queried
-  // In this chaincode, all queries will either query ALL records for a specific docType, or
-  // they will filter ALL the records looking for a specific NGO, Donor, Donation, etc. So far, 
-  // in this chaincode there is a maximum of one filter parameter in addition to the docType.
+  // Parse queryString
+  // We filter for a specific doctype, one additional filter argument is possible, e.g. a breaing UID
   let docType = "";
   let startKey = "";
   let endKey = "";
@@ -60,47 +48,43 @@ async function queryByString(stub, queryString) {
     endKey = docType + "z";
   }
   else {
-    throw new Error('##### queryByString - Cannot call queryByString without a docType element: ' + queryString);   
+    throw new Error('queryByString() - cannot call queryByString without a docType element: ' + queryString);   
   }
 
   let iterator = await stub.getStateByRange(startKey, endKey);
-
-  // Iterator handling is identical for both CouchDB and LevelDB result sets, with the 
-  // exception of the filter handling in the commented section below
+  
   let allResults = [];
   while (true) {
     let res = await iterator.next();
 
     if (res.value && res.value.value.toString()) {
       let jsonRes = {};
-      console.log('##### queryByString iterator: ' + res.value.value.toString('utf8'));
+      console.log('queryByString iterator: ' + res.value.value.toString('utf8'));
 
       jsonRes.Key = res.value.key;
       try {
         jsonRes.Record = JSON.parse(res.value.value.toString('utf8'));
       } 
       catch (err) {
-        console.log('##### queryByString error: ' + err);
+        console.log('queryByString error: ' + err);
         jsonRes.Record = res.value.value.toString('utf8');
       }
-      // ******************* LevelDB filter handling ******************************************
-      // LevelDB: additional code required to filter out records we don't need
-      // Check that each filter condition in jsonQueryString can be found in the iterator json
-      // If we are using CouchDB, this isn't required as rich query supports selectors
+
+      // Filter out levelDB records we don't need
       let jsonRecord = jsonQueryString['selector'];
       // If there is only a docType, no need to filter, just return all
-      console.log('##### queryByString jsonRecord - number of JSON keys: ' + Object.keys(jsonRecord).length);
+      console.log('queryByString jsonRecord - number of JSON keys: ' + Object.keys(jsonRecord).length);
       if (Object.keys(jsonRecord).length == 1) {
         allResults.push(jsonRes);
         continue;
       }
       for (var key in jsonRecord) {
         if (jsonRecord.hasOwnProperty(key)) {
-          console.log('##### queryByString jsonRecord key: ' + key + " value: " + jsonRecord[key]);
+          console.log('queryByString jsonRecord key: ' + key + " value: " + jsonRecord[key]);
           if (key == "docType") {
             continue;
           }
-          console.log('##### queryByString json iterator has key: ' + jsonRes.Record[key]);
+          console.log('queryByString json iterator has key: ' + jsonRes.Record[key]);
           if (!(jsonRes.Record[key] && jsonRes.Record[key] == jsonRecord[key])) {
             // we do not want this record as it does not match the filter criteria
             continue;
@@ -108,14 +92,10 @@ async function queryByString(stub, queryString) {
           allResults.push(jsonRes);
         }
       }
-      // ******************* End LevelDB filter handling ******************************************
-      // For CouchDB, push all results
-      // allResults.push(jsonRes);
     }
     if (res.done) {
       await iterator.close();
-      console.log('##### queryByString all results: ' + JSON.stringify(allResults));
-      console.log('============= END : queryByString ===========');
+      console.log('queryByString() result: ' + JSON.stringify(allResults));
       return Buffer.from(JSON.stringify(allResults));
     }
   }
@@ -123,7 +103,6 @@ async function queryByString(stub, queryString) {
 
 
 const Chaincode = class {
-
   /**
    * Initialize the state of the chaincode ledger
    * 
@@ -140,21 +119,20 @@ const Chaincode = class {
    * @param {ChainCodeStub} stub 
    */
   async Invoke(stub) {
-    console.log('============= START : Invoke ===========');
     let ret = stub.getFunctionAndParameters();
-    console.log('##### Invoke args: ' + JSON.stringify(ret));
+    console.log('Invoke() - args: ' + JSON.stringify(ret));
 
     let method = this[ret.fcn];
     if (!method) {
-      console.error('##### Invoke - error: no chaincode function with name: ' + ret.fcn + ' found');
+      console.error('Invoke() - error: no chaincode function with name: ' + ret.fcn + ' found');
       throw new Error('No chaincode function with name: ' + ret.fcn + ' found');
     }
     try {
       let response = await method(stub, ret.params);
-      console.log('##### Invoke response payload: ' + response);
+      console.log('Invoke() response payload: ' + response);
       return shim.success(response);
     } catch (err) {
-      console.log('##### Invoke - error: ' + err);
+      console.log('Invoke() - error: ' + err);
       return shim.error(err);
     }
   }
@@ -170,8 +148,7 @@ const Chaincode = class {
    * }
    */
   async produceBearing(stub, args){
-    console.log('============= START : produceBearing ===========');
-    console.log('##### produceBearing arguments: ' + JSON.stringify(args));
+    console.log('produceBearing() - args: ' + JSON.stringify(args));
 
     let json = JSON.parse(args);
     json['docType'] = 'bearing';
@@ -181,8 +158,8 @@ const Chaincode = class {
 
     let bearingQuery = await stub.getState(key);
     if(bearingQuery.toString()){
-      console.log('##### This bearing already exists: ' + UID);
-      return '##### This bearing already exists: ' + UID;
+      console.log('This bearing already exists: ' + UID);
+      return 'This bearing already exists: ' + UID;
 	  }
 
     let datetime = json['producedDate'];
@@ -190,10 +167,8 @@ const Chaincode = class {
       json['producedDate'] = new Date().toISOString();
     
 
-    await stub.putState(key, Buffer.from(JSON.stringify(json)))
-    console.log('============= END : produceBearing ===========');
+    await stub.putState(key, Buffer.from(JSON.stringify(json)))    
   }
-
 
 
   /**
@@ -207,32 +182,28 @@ const Chaincode = class {
    * }
    */
   async transfer(stub, args){
-    console.log('============= START : transfer ===========');
-    console.log('##### transfer arguments: ' + JSON.stringify(args));
+    console.log('transfer() - args: ' + JSON.stringify(args));
 
     let json = JSON.parse(args);
     
     let newOwner = json["owner"];
     if(!newOwner || !newOwner.toString())
-      throw new Error('##### transfer - New owner not supplied as argument: ' + JSON.stringify(args));
+      throw new Error('transfer() - New owner not supplied as argument: ' + JSON.stringify(args));
 
     let UID = json["UID"];
     if(!UID || !UID.toString())
-      throw new Error('##### transfer - UID not supplied as argument: ' + JSON.stringify(args));
+      throw new Error('transfer() - UID not supplied as argument: ' + JSON.stringify(args));
 
     let bearingAsBytes = await stub.getState("bearing" + UID);
     if (!bearingAsBytes.toString() || bearingAsBytes.toString().length <= 0) {
-      throw new Error('##### transfer - Cannot transfer ownership as the bearing does not exist: ' + json["UID"]);
+      throw new Error('transfer() - Cannot transfer ownership as the bearing does not exist: ' + json["UID"]);
     }
 
     let bearing = JSON.parse(bearingAsBytes);
     bearing["owner"] = newOwner;
 
-
     await stub.putState("bearing" + UID, Buffer.from(JSON.stringify(bearing)));
 
-    
-    console.log('============= END : transfer ===========');
     return queryByKey(stub, 'bearing' + UID);
    }
 
@@ -248,8 +219,7 @@ const Chaincode = class {
    * }
    */
    async putBearingMetadata(stub, args){
-    console.log('============= START : putBearingMetadata ===========');
-    console.log('##### putBearingMetadata arguments: ' + JSON.stringify(args));
+    console.log('putBearingMetadata() - args: ' + JSON.stringify(args));
 
     let json = JSON.parse(args);
     json['docType'] = 'metadata';
@@ -258,14 +228,13 @@ const Chaincode = class {
     
     let bearingQuery = await stub.getState(key);
     if(bearingQuery.toString()){
-      console.log('##### This bearing already has asssociated metadata: ' + UID);
-      return '##### This bearing already has asssociated metadata: ' + UID;
+      console.log('This bearing already has asssociated metadata: ' + UID);
+      return 'This bearing already has asssociated metadata: ' + UID;
     }
 
     let metadata = json["metadata"];
   
     await stub.putState(key, Buffer.from(JSON.stringify(metadata)))
-    console.log('============= END : putBearingMetadata ===========');
    }
 
   /**
@@ -278,8 +247,7 @@ const Chaincode = class {
    * }
    */
    async getBearingMetadata(stub, args){
-    console.log('============= START : getBearingMetadata ===========');
-    console.log('##### getBearingMetadata arguments: ' + JSON.stringify(args));
+    console.log('getBearingMetadata() - args: ' + JSON.stringify(args));
 
     let json = JSON.parse(args);
     json['docType'] = 'metadata';
@@ -287,9 +255,8 @@ const Chaincode = class {
     let key = 'metadata' + UID;   
 
     let res = await stub.getState(key); 
-    if (!res || res.toString().length <= 0) {
-      throw new Error('##### getBearingMetadata key: ' + key + ' does not exist');
-    }
+    if (!res || res.toString().length <= 0)
+      throw new Error('getBearingMetadata() key: ' + key + ' does not exist');
     
     return res;
    }
@@ -304,13 +271,12 @@ const Chaincode = class {
    * }
    */
   async queryBearing(stub, args){
-    console.log('============= START : queryBearing ===========');
-    console.log('##### queryDonor arguments: ' + JSON.stringify(args));
+    console.log('queryDonor() - args: ' + JSON.stringify(args));
 
     // args is passed as a JSON string
     let json = JSON.parse(args);
     let key = 'bearing' + json['UID'];
-    console.log('##### queryBearing key: ' + key);
+    console.log('queryBearing() key: ' + key);
 
     return queryByKey(stub, key);
    }
@@ -322,8 +288,7 @@ const Chaincode = class {
   * @param {*} args 
   */
   async queryAllBearings(stub, args) {
-    console.log('============= START : queryAllNGOs ===========');
-    console.log('##### queryAllNGOs arguments: ' + JSON.stringify(args));
+    console.log('queryAllBearings() - args: ' + JSON.stringify(args));
  
     let queryString = '{"selector": {"docType": "bearing"}}';
     return queryByString(stub, queryString);

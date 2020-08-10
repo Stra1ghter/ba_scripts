@@ -2,14 +2,21 @@
 
 docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem" -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer chaincode install -n bearing_supply_chain -l node -v v1.0.19 -p /opt/home/ba_scripts/src/package/
 
-
-docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem" -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer chaincode install -n ngo -l node -v v1.1 -p /opt/home/non-profit-blockchain/ngo-chaincode/src/
+docker exec cli peer chaincode install -n bearing_supply_chain -l node -v v1.0.19 -p /opt/home/ba_scripts/src/package/
 
 
 ## instantiate chaincode example:
 
-docker exec cli peer chaincode instantiate -o $ORDERER -C mychannel -n bearing_supply_chain -v v1.0.7 -c '{"Args":["init"]}' --cafile /opt/home/managedblockchain-tls-chain.pem --tls
+docker exec cli peer chaincode instantiate -o $ORDERER -C mychannel -n bearing_supply_chain -v v1.0.7 -c 
+'{"Args":["init"]}' --cafile /opt/home/managedblockchain-tls-chain.pem --tls
 
+docker exec cli peer chaincode instantiate -o $ORDERER -C secondchannel -n bearing_supply_chain -l node -v v1.0.19 -c '{"Args":["init"]}' --cafile /opt/home/managedblockchain-tls-chain.pem --tls -P "AND ('m-QXRPGOE44FEURB3374MPCU3ADE.member','m-X7LNL2K26BDULAZEIQ2N4NGJRM.member')"
+
+
+### sonstiges
+docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem" -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer channel join -b /opt/home/secondchannel.block -o $ORDERER --cafile /opt/home/managedblockchain-tls-chain.pem --tls
+
+docker exec -e "CORE_PEER_TLS_ENABLED=true" -e "CORE_PEER_TLS_ROOTCERT_FILE=/opt/home/managedblockchain-tls-chain.pem" -e "CORE_PEER_LOCALMSPID=$MSP" -e "CORE_PEER_MSPCONFIGPATH=$MSP_PATH" -e "CORE_PEER_ADDRESS=$PEER" cli peer channel join -b /opt/home/secondchannel.block -o $ORDERER --cafile /opt/home/managedblockchain-tls-chain.pem --tls
 
 ## upgrade
 
