@@ -1,0 +1,5 @@
+{
+    "Account": "005340056981", 
+    "UserId": "AROAQCPSKZWK2C4SGW75S:i-0fe82d8168c042042", 
+    "Arn": "arn:aws:sts::005340056981:assumed-role/HyperledgerFabricClient/i-0fe82d8168c042042"
+}

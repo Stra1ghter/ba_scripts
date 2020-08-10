@@ -1,7 +1,7 @@
 #!/bin/bash
-export MEMBERNAME=SKF
+export MEMBERNAME=Siemens
 export NETWORKID=n-RPTBIFE6UJGFHKXXVMDS35RG7M
-export MEMBERID=m-QXRPGOE44FEURB3374MPCU3ADE
+export MEMBERID=m-X7LNL2K26BDULAZEIQ2N4NGJRM
 
 if [[ -z "${ADMINUSER}" ]] || [[ -z "${ADMINPWD}" ]]; then
 	echo You forgot to export the following environment variables:
@@ -11,9 +11,9 @@ if [[ -z "${ADMINUSER}" ]] || [[ -z "${ADMINPWD}" ]]; then
 fi
 
 
-export nodeID=nd-XSKKRLEQB5DUVEINFQAOGL36YQ
-export peerEndpoint=nd-xskkrleqb5duveinfqaogl36yq.m-qxrpgoe44feurb3374mpcu3ade.n-rptbife6ujgfhkxxvmds35rg7m.managedblockchain.eu-west-1.amazonaws.com:30003
-export peerEventEndpoint=nd-xskkrleqb5duveinfqaogl36yq.m-qxrpgoe44feurb3374mpcu3ade.n-rptbife6ujgfhkxxvmds35rg7m.managedblockchain.eu-west-1.amazonaws.com:30004
+export nodeID=nd-7N3R2LZGIBBMDCBKG6E2LKRFVQ
+export peerEndpoint=nd-7n3r2lzgibbmdcbkg6e2lkrfvq.m-x7lnl2k26bdulazeiq2n4ngjrm.n-rptbife6ujgfhkxxvmds35rg7m.managedblockchain.eu-west-1.amazonaws.com:30006
+export peerEventEndpoint=nd-7n3r2lzgibbmdcbkg6e2lkrfvq.m-x7lnl2k26bdulazeiq2n4ngjrm.n-rptbife6ujgfhkxxvmds35rg7m.managedblockchain.eu-west-1.amazonaws.com:30007
 export PEERNODEID=$nodeID
 export PEERSERVICEENDPOINT=$peerEndpoint
 export PEERSERVICEENDPOINTNOPORT=${PEERSERVICEENDPOINT::-6}
