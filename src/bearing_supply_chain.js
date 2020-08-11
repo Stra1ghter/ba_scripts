@@ -160,7 +160,6 @@ const Chaincode = class {
     if(!datetime)
       json['producedDate'] = new Date().toISOString();
     
-
     await stub.putState(key, Buffer.from(JSON.stringify(json)))    
   }
 
@@ -279,7 +278,7 @@ const Chaincode = class {
  
     let queryString = '{"selector": {"docType": "bearing"}}';
     return queryByString(stub, queryString);
-  }git
+  }
 
 }
 
