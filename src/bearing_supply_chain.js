@@ -1,7 +1,7 @@
 /*
 #		Prototype chain code that tracks produced bearings and its metadata
 #
-#   Chaincode-Version: 1.0.19
+#   Chaincode-Version: 1.0.21
 */
 
 'use strict';
@@ -73,7 +73,7 @@ async function queryByString(stub, queryString) {
         continue;
       }
       for (var key in jsonRecord) {
-        if (jsonRecord.hasOwnProperty(key)) {
+       // if (jsonRecord.hasOwnProperty(key)) {
           console.log('queryByString() jsonRecord key: ' + key + " value: " + jsonRecord[key]);
           if (key == "docType")
             continue;
@@ -84,7 +84,7 @@ async function queryByString(stub, queryString) {
             continue;
           }
           allResults.push(jsonRes);
-        }
+     //   }
       }
     }
     if (res.done) {
