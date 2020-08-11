@@ -153,7 +153,7 @@ const Chaincode = class {
     let bearingQuery = await stub.getState(key);
     if(bearingQuery.toString()){
       console.log('This bearing already exists: ' + UID);
-      return 'This bearing already exists: ' + UID;
+      throw new Error('This bearing already exists: ' + UID);
 	  }
 
     let datetime = json['producedDate'];
@@ -161,7 +161,8 @@ const Chaincode = class {
       json['producedDate'] = new Date().toISOString();
     
 
-    await stub.putState(key, Buffer.from(JSON.stringify(json)))    
+    await stub.putState(key, Buffer.from(JSON.stringify(json)));
+    return queryByKey(stub, 'bearing' + UID);   
   }
 
 
@@ -279,7 +280,7 @@ const Chaincode = class {
  
     let queryString = '{"selector": {"docType": "bearing"}}';
     return queryByString(stub, queryString);
-  }
+  }git
 
 }
 
