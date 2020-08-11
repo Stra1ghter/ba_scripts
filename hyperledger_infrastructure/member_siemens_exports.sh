@@ -30,6 +30,12 @@ export VPCENDPOINTSERVICENAME=$VpcEndpointServiceName
 export CASERVICEENDPOINT=$CaEndpoint
 export CASERVICEENDPOINTNOPORT=${CaEndpoint::-6}
 
+export MSP_PATH=/opt/home/admin-msp
+export MSP=$MEMBERID
+export ORDERER=$ORDERINGSERVICEENDPOINT
+export PEER=$PEERSERVICEENDPOINT
+export CAFILE=/opt/home/managedblockchain-tls-chain.pem
+
 echo Useful information stored in EXPORT variables
 echo REGION: $REGION
 echo NETWORKNAME: $NETWORKNAME
