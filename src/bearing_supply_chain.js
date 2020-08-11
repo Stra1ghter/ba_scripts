@@ -103,7 +103,7 @@ const Chaincode = class {
    * @param {ChaincodeStub} stub 
    */
   async Init(stub) {
-    log('Instantiated or upgraded bearing_supply_chain chaincode');
+    console.log('Instantiated or upgraded bearing_supply_chain chaincode');
     return shim.success();
   }
 
