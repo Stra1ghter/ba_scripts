@@ -1,0 +1,75 @@
+2_SupplyChainInformationSharepoint.js
+=====================================
+
+   Deploying 'SupplyChainInformationSharepoint'
+   --------------------------------------------
+   > block number:        8571156
+   > block timestamp:     1598470754
+   > account:             0xb15377CE3B7Ed3ce0B51c53329Aa37940B5eF442
+   > balance:             0.692224301
+   > gas used:            402705 (0x62511)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00080541 ETH
+
+   -------------------------------------
+   > Total cost:          0.00080541 ETH
+
+
+Summary
+=======
+> Total deployments:   2
+> Final cost:          0.001159296 ETH
+
+
+
+
+
+Starting migrations...
+======================
+> Network name:    'ropsten'
+> Network id:      3
+> Block gas limit: 8000000 (0x7a1200)
+
+
+1_initial_migration.js
+======================
+
+   Deploying 'Migrations'
+   ----------------------
+   > transaction hash:    0x1658a86640816a1a635882b43f0ddb9626122e44c3ab3ca625498f695fabc766
+   > Blocks: 1            Seconds: 48
+   > contract address:    0x236970816f88D3793c188fb96CD2955b14519c0a
+   > block number:        8571153
+   > block timestamp:     1598470724
+   > account:             0xb15377CE3B7Ed3ce0B51c53329Aa37940B5eF442
+   > balance:             0.689599413
+   > gas used:            191943 (0x2edc7)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00383886 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:          0.00383886 ETH
+
+
+2_SupplyChainInformationSharepoint.js
+=====================================
+
+   Deploying 'SupplyChainInformationSharepoint'
+   --------------------------------------------
+   > transaction hash:    0x672e4a662891aa08070d3e5e98a2e29bc48f206b773596a6dc4830002b949b0e
+   > Blocks: 0            Seconds: 52
+   > contract address:    0x2e115363c04f25b5F04752B846F8CA4E52Fd6c7D
+   > block number:        8571155
+   > block timestamp:     1598470804
+   > account:             0xb15377CE3B7Ed3ce0B51c53329Aa37940B5eF442
+   > balance:             0.680398553
+   > gas used:            417705 (0x65fa9)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.0083541 ETH
+
