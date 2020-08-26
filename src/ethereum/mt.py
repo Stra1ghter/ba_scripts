@@ -62,6 +62,7 @@ class MerkleTree:
 
         if not data_path.exists():
             raise FileNotFoundError(f"Data directory \"{data_path}\" not found.")
+        print("Found data directory containing JSON files")
 
         self.ordered_file_list = [f for f in data_path.iterdir() if f.is_file() and f.suffix == ".json"]
         self.ordered_file_list.sort() # The order of files have to be the same on all systems
@@ -75,6 +76,10 @@ class MerkleTree:
         """
         Builds a Merkle tree over the leaf node list.
         """
+        
+        print("Building Merkle tree ...")
+        print()
+
         current_layer = self.__leaf_nodes
         next_layer = []
 
@@ -94,8 +99,11 @@ class MerkleTree:
 
         self.__merkle_root_node = current_layer[0]
         print("Last Layer:" + str(current_layer))
+        print()
 
     def hexdigest(self):
         return self.__merkle_root_node.hexdigest()
 
-mt = MerkleTree("data")
+
+if __name__ == "__main__":
+    mt = MerkleTree("data")
