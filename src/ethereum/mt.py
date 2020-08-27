@@ -101,8 +101,8 @@ class MerkleTree:
         print("Last Layer:" + str(current_layer))
         print()
 
-    def hexdigest(self):
-        return self.__merkle_root_node.hexdigest()
+    def digest(self):
+        return self.__merkle_root_node.digest()
 
 
 if __name__ == "__main__":

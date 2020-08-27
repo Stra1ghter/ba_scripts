@@ -8,7 +8,12 @@ if not w3.isConnected():
     sys.exit()
 
 mt = MerkleTree("data")
-hexdigest = mt.hexdigest()
+mt_digest = mt.digest()
+
+with open("last_hash", "wb") as f:
+    hash = f.read()
+    print("last hash" + str(hash))
+    f.write(mt_digest)
 
 
 abi = ""
@@ -21,6 +26,6 @@ sc_contract = w3.eth.contract(
 )
 
 hash_as_int = int(mt.hexdigest(), 16)
-tx_hash = sc_contract.functions.tradeInformation(hash_as_int).transact({'from':"0x4022f0126020C395dc81693e0271114E2667C221"})
-tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-print("Result: " + tx_receipt) 
+#tx_hash = sc_contract.functions.tradeInformation(hash_as_int).transact({'from':"0x4022f0126020C395dc81693e0271114E2667C221"})
+#tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+#print("Result: " + tx_receipt)
