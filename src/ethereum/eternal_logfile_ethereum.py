@@ -15,4 +15,12 @@ abi = ""
 with open("sc_contract_abi.json", "r") as f:
     abi = json.loads(f.read())
 
-print("ABIT: " + abi)
+sc_contract = w3.eth.contract(
+    address="0x2e115363c04f25b5F04752B846F8CA4E52Fd6c7D",
+    abi=abi
+)
+
+hash_as_int = int(mt.hexdigest(), 16)
+tx_hash = sc_contract.functions.tradeInformation(hash_as_int).transact({'from':"0x4022f0126020C395dc81693e0271114E2667C221"})
+tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+print("Result: " + tx_receipt) 
