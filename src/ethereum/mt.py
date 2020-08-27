@@ -105,5 +105,5 @@ class MerkleTree:
         return self.__merkle_root_node.hexdigest()
 
 
-if __name__ == "__main__":
-    mt = MerkleTree("data")
+#if __name__ == "__main__":
+mt = MerkleTree("data")
