@@ -1,8 +1,8 @@
 /*
-#		Prototype chain code that tracks produced bearings and its metadata
-#
-#   Chaincode-Version: 1.0.21
-*/
+ *   Prototype chain code that tracks produced bearings and its metadata
+ *
+ *   Chaincode-Version: 1.0.21
+ */
 
 'use strict';
 const shim = require('fabric-shim');
@@ -16,11 +16,12 @@ const util = require('util');
 async function queryByKey(stub, key) {
   console.log('queryByKey() - key arg: ' + key);
 
-  let res = await stub.getState(key); 
-  if (!res || res.toString().length <= 0)
+  let result = await stub.getState(key);
+
+  if (!result || result.toString().length == 0)
     throw new Error('queryByKey() key: ' + key + ' does not exist');
   
-  return res;
+  return result;
 }
 
 /**
@@ -39,16 +40,16 @@ async function queryByString(stub, queryString) {
   let endKey = "";
   let jsonQueryString = JSON.parse(queryString);
   if (jsonQueryString['selector'] && jsonQueryString['selector']['docType']) {
-    docType = jsonQueryString['selector']['docType'];
-    startKey = docType + "0";
-    endKey = docType + "z";
+    docType = jsonQueryString['selector']['docType'];    
+    startKey = docType + "000";
+    endKey = docType + "zzz";
   }
   else
     throw new Error('queryByString() - cannot call queryByString without a docType element: ' + queryString);   
 
-  let iterator = await stub.getStateByRange(startKey, endKey);
-  
-  let allResults = [];
+  let resultArr = [];
+  let iterator = await stub.getStateByRange(startKey, endKey);  
+
   while (true) {
     let res = await iterator.next();
 
@@ -65,32 +66,29 @@ async function queryByString(stub, queryString) {
         jsonRes.Record = res.value.value.toString('utf8');
       }
 
-      let jsonRecord = jsonQueryString['selector'];
-      // If there is only a docType, no need to filter, just return all
-      console.log('queryByString() jsonRecord - number of JSON keys: ' + Object.keys(jsonRecord).length);
-      if (Object.keys(jsonRecord).length == 1) {
-        allResults.push(jsonRes);
+      let jsonQueryStringSearchRecord = jsonQueryString['selector'];
+      // If there is only a docType, there is no need to filter, just return all
+      console.log('queryByString() jsonQueryStringSearchRecord - number of JSON keys: ' + Object.keys(jsonQueryStringSearchRecord).length);
+      if (Object.keys(jsonQueryStringSearchRecord).length == 1) {
+        resultArr.push(jsonRes);
         continue;
       }
-      for (var key in jsonRecord) {
-       // if (jsonRecord.hasOwnProperty(key)) {
-          console.log('queryByString() jsonRecord key: ' + key + " value: " + jsonRecord[key]);
+      for (var key in jsonQueryStringSearchRecord) {
+          console.log('queryByString() jsonQueryStringSearchRecord key: ' + key + " value: " + jsonQueryStringSearchRecord[key]);
           if (key == "docType")
             continue;
           
           console.log('queryByString() json iterator has key: ' + jsonRes.Record[key]);
-          if (!(jsonRes.Record[key] && jsonRes.Record[key] == jsonRecord[key])) {
-            // we skip this record as it does not fit the filter criteria
-            continue;
-          }
-          allResults.push(jsonRes);
-     //   }
+          if (!(jsonRes.Record[key] && jsonRes.Record[key] == jsonQueryStringSearchRecord[key]))            
+            continue; // skip record, it doesn't fit the filter criteria
+          resultArr.push(jsonRes);
       }
     }
+    
     if (res.done) {
       await iterator.close();
-      console.log('queryByString() result: ' + JSON.stringify(allResults));
-      return Buffer.from(JSON.stringify(allResults));
+      console.log('queryByString() result: ' + JSON.stringify(resultArr));
+      return Buffer.from(JSON.stringify(resultArr));
     }
   }
 }
@@ -113,16 +111,17 @@ const Chaincode = class {
    * @param {ChainCodeStub} stub 
    */
   async Invoke(stub) {
-    let ret = stub.getFunctionAndParameters();
-    console.log('Invoke() - args: ' + JSON.stringify(ret));
+    let chaincodeFuncAndArgs = stub.getFunctionAndParameters();
+    console.log('Invoke() - args: ' + JSON.stringify(chaincodeFuncAndArgs));
 
-    let method = this[ret.fcn];
+    let method = this[chaincodeFuncAndArgs.fcn];
     if (!method) {
-      console.error('Invoke() - error: no chaincode function with name: ' + ret.fcn + ' found');
-      throw new Error('No chaincode function with name: ' + ret.fcn + ' found');
+      console.error('Invoke() - error: no chaincode function with name: ' + chaincodeFuncAndArgs.fcn + ' found');
+      throw new Error('No chaincode function with name: ' + chaincodeFuncAndArgs.fcn + ' found');
     }
+
     try {
-      let response = await method(stub, ret.params);
+      let response = await method(stub, chaincodeFuncAndArgs.params);
       console.log('Invoke() response payload: ' + response);
       return shim.success(response);
     } catch (err) {
@@ -154,7 +153,7 @@ const Chaincode = class {
     if(bearingQuery.toString()){
       console.log('This bearing already exists: ' + UID);
       return 'This bearing already exists: ' + UID;
-	  }
+    }
 
     let datetime = json['producedDate'];
     if(!datetime)
@@ -196,8 +195,6 @@ const Chaincode = class {
     bearing["owner"] = newOwner;
 
     await stub.putState("bearing" + UID, Buffer.from(JSON.stringify(bearing)));
-
-    return queryByKey(stub, 'bearing' + UID);
    }
 
   /**
